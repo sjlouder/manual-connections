@@ -128,19 +128,22 @@ if [ "$PIA_DNS" == true ]; then
   echo
   dnsSettingForVPN="DNS = $dnsServer"
 fi
-echo -n "Trying to write /etc/wireguard/pia.conf..."
-mkdir -p /etc/wireguard
+echo -n "Trying to write /config/pia.conf..."
+#mkdir -p /etc/wireguard
 echo "
 [Interface]
 Address = $(echo "$wireguard_json" | jq -r '.peer_ip')
 PrivateKey = $privKey
 $dnsSettingForVPN
+PostUp = DROUTE=\$(ip route | grep default | awk '{print \$3}'); HOMENET=10.0.0.0/8; HOMENET2=172.16.0.0/12; HOMENET3=192.168.0.0/16; ip route add \$HOMENET3 via \$DROUTE; ip route add \$HOMENET2 via \$DROUTE; ip route add \$HOMENET via \$DROUTE; iptables -I OUTPUT -d \$HOMENET -j ACCEPT; iptables -A OUTPUT -d \$HOMENET2 -j ACCEPT; iptables -A OUTPUT -d \$HOMENET3 -j ACCEPT; iptables -A OUTPUT ! -o %i -m mark ! --mark \$(wg show %i fwmark) -m addrtype ! --dst-type LOCAL -j REJECT
+PreDown = HOMENET=10.0.0.0/8; HOMENET2=172.16.0.0/12; HOMENET3=192.168.0.0/16; ip route delete \$HOMENET; ip route delete \$HOMENET2; ip route delete \$HOMENET3; iptables -D OUTPUT ! -o %i -m mark ! --mark \$(wg show %i fwmark) -m addrtype ! --dst-type LOCAL -j REJECT; iptables -D OUTPUT -d \$HOMENET -j ACCEPT; iptables -D OUTPUT -d \$HOMENET2 -j ACCEPT; iptables -D OUTPUT -d \$HOMENET3 -j ACCEPT
+
 [Peer]
 PersistentKeepalive = 25
 PublicKey = $(echo "$wireguard_json" | jq -r '.server_key')
 AllowedIPs = 0.0.0.0/0
 Endpoint = ${WG_SERVER_IP}:$(echo "$wireguard_json" | jq -r '.server_port')
-" > /etc/wireguard/pia.conf || exit 1
+" > /config/pia.conf || exit 1
 echo -e ${GREEN}OK!${NC}
 
 # Start the WireGuard interface.

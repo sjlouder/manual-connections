@@ -1,0 +1,25 @@
+
+# docker-compose
+services:
+	PIAWG:
+		container_name: PIAWireguard
+		image: # Custom repo link?
+		restart: unless-stopped
+		cap_add:
+		- NET_ADMIN
+		- SYS_MODULE
+		ports:
+			- 51820:51820/udp
+		volumes:
+			- ./PIAWireguard/config:/config
+		environment:
+			- PUID=1000
+			- PGID=1000
+			- TZ=America/New_York
+			- PIA_LOCATION=<ServerID>
+			- PIA_USER=0123456
+			- PIA_PASS=pass
+		sysctls:
+			- net.ipv4.conf.all.src_valid_mark=1
+			- net.ipv6.conf.all.disable_ipv6=1
+			- net.ipv6.conf.default.disable_ipv6=1

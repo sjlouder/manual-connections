@@ -5,10 +5,10 @@ COPY ca.rsa.4096.crt /config/
 
 
 # CMD ? (custom script to run get-region or get-token or connect script based on env variables)
+CMD ["bash", "/config/get_region.sh"]
 
-
-HEALTHCHECK --interval=2m --timeout=10s --start-period=15s \
-	CMD bash healthcheck.sh
+# HEALTHCHECK --interval=2m --timeout=10s --start-period=15s \
+# 	CMD bash healthcheck.sh
 
 # Options
 # 	Specify location

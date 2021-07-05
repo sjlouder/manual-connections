@@ -83,10 +83,10 @@ if [ "$(whoami)" != "root" ]; then
   exit 1
 fi
 
-mkdir -p /opt/piavpn-manual
+mkdir -p /config/piavpn-manual
 # Erase old latencyList file
-rm -f /opt/piavpn-manual/latencyList
-touch /opt/piavpn-manual/latencyList
+rm -f /config/piavpn-manual/latencyList
+touch /config/piavpn-manual/latencyList
 
 # This allows you to set the maximum allowed latency in seconds.
 # All servers that respond slower than this will be ignored.
@@ -113,11 +113,11 @@ printServerLatency() {
     >&2 echo Got latency ${time}s for region: $regionName
     echo $time $regionID $serverIP
     # Write a list of servers with acceptable latancy
-    # to /opt/piavpn-manual/latencyList
-    echo -e $time $regionID'\t'$serverIP'\t'$regionName >> /opt/piavpn-manual/latencyList
+    # to /config/piavpn-manual/latencyList
+    echo -e $time $regionID'\t'$serverIP'\t'$regionName >> /config/piavpn-manual/latencyList
   fi
   # Sort the latencyList, ordered by latency
-  sort -no /opt/piavpn-manual/latencyList /opt/piavpn-manual/latencyList
+  sort -no /config/piavpn-manual/latencyList /config/piavpn-manual/latencyList
 }
 export -f printServerLatency
 
@@ -172,7 +172,7 @@ if [[ $selectedRegion == "none" ]]; then
     exit 1
   else
     echo -e "A list of servers and connection details, ordered by latency can be 
-found in at : ${GREEN}/opt/piavpn-manual/latencyList${NC}
+found in at : ${GREEN}/config/piavpn-manual/latencyList${NC}
 "
   fi
 else
@@ -223,9 +223,9 @@ if [[ -z "$PIA_TOKEN" ]] || [[ $PIA_TOKEN == "" ]]; then
     exit 0
   fi
   ./get_token.sh
-  PIA_TOKEN=$( awk 'NR == 1' /opt/piavpn-manual/token )
+  PIA_TOKEN=$( awk 'NR == 1' /config/piavpn-manual/token )
   export PIA_TOKEN
-  rm -f /opt/piavpn-manual/token
+  rm -f /config/piavpn-manual/token
 else
   echo -e "Using existing token ${GREEN}$PIA_TOKEN${NC}."
   echo
@@ -242,7 +242,7 @@ if [[ $VPN_PROTOCOL == wireguard ]]; then
   echo
   PIA_PF=$PIA_PF PIA_TOKEN=$PIA_TOKEN WG_SERVER_IP=$bestServer_WG_IP \
     WG_HOSTNAME=$bestServer_WG_hostname ./connect_to_wireguard_with_token.sh
-  rm -f /opt/piavpn-manual/latencyList
+  rm -f /config/piavpn-manual/latencyList
   exit 0
 fi
 
@@ -268,6 +268,6 @@ if [[ $VPN_PROTOCOL == openvpn* ]]; then
     OVPN_HOSTNAME=$serverHostname \
     CONNECTION_SETTINGS=$VPN_PROTOCOL \
     ./connect_to_openvpn_with_token.sh
-  rm -f /opt/piavpn-manual/latencyList
+  rm -f /config/piavpn-manual/latencyList
   exit 0
 fi

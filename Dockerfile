@@ -5,7 +5,7 @@ COPY ca.rsa.4096.crt /opt/PIA/
 
 WORKDIR /opt/PIA
 # CMD ? (custom script to run get-region or get-token or connect script based on env variables)
-ENTRYPOINT ["bash", "/opt/PIA/get_region.sh"]
+ENTRYPOINT ["bash", "/opt/PIA/startup.sh"]
 
 # HEALTHCHECK --interval=2m --timeout=10s --start-period=15s \
 # 	CMD bash healthcheck.sh

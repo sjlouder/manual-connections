@@ -8,27 +8,28 @@
 VPN_IP=$(grep -Po 'Endpoint\s=\s\K[^:]*' /config/pia.conf)
 echo VPN IP: $VPN_IP
 
-
+# If our container is terminated or interrupted, we'll be tidy and bring down
+# the vpn
 function finish {
     echo "$(date): Shutting down vpn"
     wg-quick down /config/pia.conf
 }
 
-
-function current_ip {
-    curl --silent --show-error --retry 10 --fail https://www.privateinternetaccess.com/site-api/get-location-info | jq -r '.ip' 
-}
-
-# If our container is terminated or interrupted, we'll be tidy and bring down
-# the vpn
 trap finish TERM INT
 
 # Every minute we check to our IP address
 # Our IP address should be the VPN endpoint for the duration of the
 # container, so this function will give us a true or false if our IP is
 # actually the same as the VPN's
-while [[ current_ip == $VPN_IP ]]; do
-    sleep 60;
+function check_current_ip {
+	currentIP=$(curl --silent --show-error --retry 10 --fail https://www.privateinternetaccess.com/site-api/get-location-info | jq -r '.ip')
+	[[ $currentIP == $VPN_IP ]] && return 0 || return 1
+}
+
+while check_current_ip
+do
+	echo "$(date): IP validation check succeeded ($currentIP)"
+    sleep 300;
 done
 
 echo "$(date): VPN IP address not detected"

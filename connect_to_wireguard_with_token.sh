@@ -111,7 +111,7 @@ fi
 # these scripts. Feel free to fork the project and test it out.
 echo
 echo Trying to disable a PIA WG connection in case it exists...
-wg-quick down pia && echo -e "${GREEN}\nPIA WG connection disabled!${NC}"
+wg-quick down /config/pia.conf && echo -e "${GREEN}\nPIA WG connection disabled!${NC}"
 echo
 
 # Create the WireGuard config based on the JSON received from the API
@@ -152,7 +152,7 @@ echo -e ${GREEN}OK!${NC}
 # just hardcode /etc/resolv.conf to "nameserver 10.0.0.242".
 echo
 echo Trying to create the wireguard interface...
-wg-quick up pia || exit 1
+wg-quick up /config/pia.conf || exit 1
 echo
 echo -e "${GREEN}The WireGuard interface got created.${NC}
 

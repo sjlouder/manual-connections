@@ -5,7 +5,8 @@
 # PIA provided scripts to get the fastest region and connect to it
 ./get_region.sh
 
-echo VPN IP: $WG_SERVER_IP
+VPN_IP=$(grep -Po 'Endpoint\s=\s\K[^:]*' /config/pia.conf)
+echo VPN IP: $VPN_IP
 
 
 function finish {
@@ -13,8 +14,6 @@ function finish {
     wg-quick down /config/pia.conf
 }
 
-#$WG_SERVER_IP?
-#VPN_IP=$(grep -Po 'Endpoint\s=\s\K[^:]*' /etc/wireguard/wgnet0.conf)
 
 function current_ip {
     curl --silent --show-error --retry 10 --fail https://www.privateinternetaccess.com/site-api/get-location-info | jq -r '.ip' 

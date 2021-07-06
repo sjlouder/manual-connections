@@ -153,7 +153,6 @@ echo -e ${GREEN}OK!${NC}
 echo
 echo Trying to create the wireguard interface...
 wg-quick up /config/pia.conf || exit 1
-export $WG_SERVER_IP
 echo
 echo -e "${GREEN}The WireGuard interface got created.${NC}
 

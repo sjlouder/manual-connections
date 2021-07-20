@@ -26,10 +26,11 @@ function check_current_ip {
 	[[ $currentIP == $VPN_IP ]] && return 0 || return 1
 }
 
+echo 'Beginning 15 minute IP check loop'
 while check_current_ip
 do
 	#echo "$(date): IP validation check succeeded ($currentIP)"
     sleep (60*15);
 done
 
-echo "$(date): VPN IP address not detected"
+echo "$(date): VPN IP address not detected ($currentIP)"

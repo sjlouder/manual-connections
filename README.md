@@ -1,6 +1,34 @@
-# Manual PIA VPN Connections
+# PIA Wireguard Docker Container
 
-This repository contains documentation on how to create native WireGuard and OpenVPN connections, and also on how to enable Port Forwarding in case you require this feature. You will find a lot of information below. However if you prefer quick test, here is the __TL/DR__:
+This repository is a fork of https://github.com/pia-foss/manual-connections that aims to create a PIA wireguard Docker container
+
+
+## Quickstart
+```
+git clone https://github.com/sjlouder/manual-connections.git
+cd manual-connections
+docker-compose build
+docker-compose up -d
+```
+By default, most of the state is stored in ./config folder.
+
+## Features
+This is a basic wrapper around the original scripts to get a connection working, so not a lot of testing has been done around the various use cases.
+
+Features not currently supported/tested:
+- Specifying preferred region (currently the script will choose the server with the best latency)
+- Caching/reusing token (currently they are regenerated on start)
+- Port forwarding (may be enabled via environment variables, not part of my use case so I haven't looked into it)
+
+
+
+
+
+
+
+------
+
+This rpeository contains documentation on how to create native WireGuard and OpenVPN connections, and also on how to enable Port Forwarding in case you require this feature. You will find a lot of information below. However if you prefer quick test, here is the __TL/DR__:
 
 ```
 git clone https://github.com/pia-foss/manual-connections.git

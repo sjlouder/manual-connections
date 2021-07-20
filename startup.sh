@@ -17,7 +17,7 @@ function finish {
 
 trap finish TERM INT
 
-# Every minute we check to our IP address
+# Every 15 minutes we check our IP address
 # Our IP address should be the VPN endpoint for the duration of the
 # container, so this function will give us a true or false if our IP is
 # actually the same as the VPN's
@@ -28,8 +28,8 @@ function check_current_ip {
 
 while check_current_ip
 do
-	echo "$(date): IP validation check succeeded ($currentIP)"
-    sleep 300;
+	#echo "$(date): IP validation check succeeded ($currentIP)"
+    sleep (60*15);
 done
 
 echo "$(date): VPN IP address not detected"

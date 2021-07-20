@@ -30,7 +30,7 @@ echo 'Beginning 15 minute IP check loop'
 while check_current_ip
 do
 	#echo "$(date): IP validation check succeeded ($currentIP)"
-    sleep (60*15);
+    sleep 900
 done
 
 echo "$(date): VPN IP address not detected ($currentIP)"
